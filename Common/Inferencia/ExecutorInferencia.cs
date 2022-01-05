@@ -10,8 +10,8 @@ namespace MarkovChains.Inferencia
     {
         public static void RunCyclingTime2()
         {
-            double[] trainingData = new double[] {21,8,20,4,4,1,10,8,8,4 };
-            
+            double[] trainingData = new double[] { 21, 8, 20, 4, 4, 1, 10, 8, 8, 4 };
+
             ModelData initPriors = new ModelData(
                 Gaussian.FromMeanAndPrecision(1.0, 0.01),
                 Gamma.FromShapeAndScale(2.0, 0.5));
@@ -39,9 +39,9 @@ namespace MarkovChains.Inferencia
             Console.WriteLine("Tomorrows standard deviation: {0:f2}", tomorrowsStdDev);
             Console.WriteLine("Probability that tomorrow's time is < 18 min: {0}",
                               cyclistPrediction.InferProbabilityTimeLessThan(18.0));
-            
+
             // Second round of training
-            double[] trainingData2 = new double[] { 18,5,27,37,15 };
+            double[] trainingData2 = new double[] { 18, 5, 27, 37, 15 };
 
             cyclistTraining.SetModelData(posteriors1);
             ModelData posteriors2 = cyclistTraining.InferModelData(trainingData2);

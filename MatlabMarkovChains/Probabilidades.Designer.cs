@@ -37,6 +37,7 @@ namespace MatlabMarkovChains
             this.btnExecutar = new System.Windows.Forms.Button();
             this.numIteracoes = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
+            this.btnInferencia = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.gridProbabilidades)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridProximosEstados)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numIteracoes)).BeginInit();
@@ -124,12 +125,23 @@ namespace MatlabMarkovChains
             this.label3.TabIndex = 7;
             this.label3.Text = "Nº Iterações";
             // 
+            // btnInferencia
+            // 
+            this.btnInferencia.Location = new System.Drawing.Point(1008, 22);
+            this.btnInferencia.Name = "btnInferencia";
+            this.btnInferencia.Size = new System.Drawing.Size(75, 23);
+            this.btnInferencia.TabIndex = 8;
+            this.btnInferencia.Text = "Inferência";
+            this.btnInferencia.UseVisualStyleBackColor = true;
+            this.btnInferencia.Click += new System.EventHandler(this.btnInferencia_Click);
+            // 
             // Probabilidades
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(1095, 505);
+            this.Controls.Add(this.btnInferencia);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.numIteracoes);
             this.Controls.Add(this.btnExecutar);
@@ -159,6 +171,7 @@ namespace MatlabMarkovChains
         private System.Windows.Forms.Button btnExecutar;
         private System.Windows.Forms.NumericUpDown numIteracoes;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button btnInferencia;
     }
 }
 

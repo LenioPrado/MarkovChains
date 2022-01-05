@@ -1,16 +1,13 @@
 ﻿using Common;
 using Common.Helpers;
 using Common.Model;
+using MarkovChains.Inferencia;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MatlabMarkovChains
@@ -125,6 +122,11 @@ namespace MatlabMarkovChains
                     }
                 }
             }
-        }       
+        }
+
+        private void btnInferencia_Click(object sender, EventArgs e)
+        {
+            ExecutorInferencia.RodarInferencia(_dadosUGsEstados);
+        }
     }
 }
