@@ -36,6 +36,11 @@ namespace Common.Helpers
             Replace(parametro, $"'{valor}'");
         }
 
+        public void AdicionarParametro(string parametro, string[] valores)
+        {
+            Replace(parametro, $"['{string.Join("','", valores)}']");
+        }
+
         public void AdicionarParametro(string parametro, bool[] vetor)
         {
             string join = $"[ {string.Join(" ", vetor)} ]".ToLowerInvariant();

@@ -35,8 +35,11 @@ namespace MatlabMarkovChains
             this.gridProximosEstados = new System.Windows.Forms.DataGridView();
             this.label2 = new System.Windows.Forms.Label();
             this.btnExecutar = new System.Windows.Forms.Button();
+            this.numIteracoes = new System.Windows.Forms.NumericUpDown();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.gridProbabilidades)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridProximosEstados)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numIteracoes)).BeginInit();
             this.SuspendLayout();
             // 
             // gridProbabilidades
@@ -95,12 +98,40 @@ namespace MatlabMarkovChains
             this.btnExecutar.UseVisualStyleBackColor = true;
             this.btnExecutar.Click += new System.EventHandler(this.btnExecutar_Click);
             // 
+            // numIteracoes
+            // 
+            this.numIteracoes.Location = new System.Drawing.Point(487, 29);
+            this.numIteracoes.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numIteracoes.Name = "numIteracoes";
+            this.numIteracoes.Size = new System.Drawing.Size(120, 20);
+            this.numIteracoes.TabIndex = 6;
+            this.numIteracoes.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(484, 13);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(66, 13);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "Nº Iterações";
+            // 
             // Probabilidades
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(1095, 505);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.numIteracoes);
             this.Controls.Add(this.btnExecutar);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.gridProximosEstados);
@@ -112,6 +143,7 @@ namespace MatlabMarkovChains
             this.Load += new System.EventHandler(this.Probabilidades_Load);
             ((System.ComponentModel.ISupportInitialize)(this.gridProbabilidades)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridProximosEstados)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numIteracoes)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -125,6 +157,8 @@ namespace MatlabMarkovChains
         private System.Windows.Forms.DataGridView gridProximosEstados;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnExecutar;
+        private System.Windows.Forms.NumericUpDown numIteracoes;
+        private System.Windows.Forms.Label label3;
     }
 }
 

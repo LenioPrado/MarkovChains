@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,8 +18,20 @@ namespace MatlabMarkovChains
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Probabilidades());
-            //Application.Run(new DataGridViewRowDemo());
+
+            var services = new ServiceCollection();
+            ConfigureServices(services);
+            using (ServiceProvider serviceProvider = services.BuildServiceProvider())
+            {
+                var formProbabilidades = serviceProvider.GetRequiredService<Probabilidades>();
+                Application.Run(formProbabilidades);
+            }
+        }
+
+        private static void ConfigureServices(ServiceCollection services)
+        {
+            services.AddSingleton<Probabilidades>()
+                    .AddLogging(configure => configure.AddConsole());
         }
     }
 }

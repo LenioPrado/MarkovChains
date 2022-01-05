@@ -1,1 +1,7 @@
+Common/bin/
 packages/
+bin/
+obj/
+Debug/
+*.suo
+.vs/
