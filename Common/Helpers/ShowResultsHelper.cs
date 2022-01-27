@@ -1,4 +1,5 @@
 ﻿using Common.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -36,17 +37,48 @@ namespace Common.Helpers
                         string estadoDestino = dadoEstadoAtualDestino.Key.Value;
                         DadosOrigemDestino origemDestino = dadoEstadoAtualDestino.Value;
 
-                        if (origemDestino.ContagemEstadoDestino > 0)
+                        if (origemDestino.SomaDuracaoEstadoDestino > 0)
                         {
                             IEnumerable<object> contentData = new object[]
                                             {
-                            dadoUG.UG, estadoOrigem, origemDestino.ContagemEstadoAtual, estadoDestino, origemDestino.ContagemEstadoDestino, origemDestino.Percentual, $"{origemDestino.PercentualFormatado} %"
+                            dadoUG.UG, estadoOrigem, origemDestino.SomaDuracaoEstadoAtual, estadoDestino, origemDestino.SomaDuracaoEstadoDestino, origemDestino.Percentual, $"{origemDestino.PercentualFormatado} %"
                                             };
 
                             result.AddContentData(contentData.ToArray(), Alignment.Left);      
                         }                   
                     }
                     result.AddDashLine();
+                }
+                Log(result.GetFormattedHeader(titleMsg, Alignment.Left));
+                Log(result.GetFormattedContent());
+            }
+        }
+
+        public static void ShowEstadosValues(string titleMsg, IEnumerable<Estados> estados)
+        {
+            if (estados.Count() > 0)
+            {
+                estados = estados.OrderBy(c => c.UG).ThenBy(c => c.Inicio);
+                IEnumerable<int> sizes = new int[] { 9, 10, 6, 7, 20, 20, 14 };
+                IEnumerable<string> fields = new string[] { "UG", "Ocorrencia", "Origem", "Destino", "Inicio", "Fim", "Duracao" };
+
+                ResultFormatterHelper result = new ResultFormatterHelper(sizes, fields);
+
+                string currentUG = "";
+                foreach (Estados estado in estados)
+                {
+                    IEnumerable<object> contentData = new object[]
+                    { estado.UG, estado.Ocorrencia, estado.EstadoOrigem, estado.EstadoDestino, estado.Inicio, estado.Fim, Math.Round(estado.Duracao, 3) };
+                                        
+
+                    if (!currentUG.Equals(estado.UG))
+                    {
+                        if (!string.IsNullOrEmpty(currentUG))
+                            result.AddDashLine();
+                        
+                        currentUG = estado.UG;                        
+                    }
+                    result.AddContentData(contentData.ToArray(), Alignment.Left);
                 }
                 Log(result.GetFormattedHeader(titleMsg, Alignment.Left));
                 Log(result.GetFormattedContent());

@@ -17,7 +17,7 @@ namespace Common
 
         public IEnumerable<DadosUG> ObterDadosUGsPorEstados()
         {
-            var filtered = _estados.Where(c => !string.IsNullOrEmpty(c.Sigla));
+            var filtered = _estados.Where(c => !string.IsNullOrEmpty(c.EstadoOrigem));
 
             var grupoUGsComEstados = filtered.GroupBy(c => c.UG,
                             (ug, listaEstados) => new

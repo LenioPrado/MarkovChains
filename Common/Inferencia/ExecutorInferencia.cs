@@ -65,7 +65,7 @@ namespace MarkovChains.Inferencia
 
         private static double[] ObterDadosTreinamento(IList<Estados> estadosUG, int inicio, int quantidade)
         {
-            double[] treinamento = estadosUG.Skip(inicio).Take(quantidade).Select(estado => estado.Duracao.Value.TotalMinutes).ToArray();
+            double[] treinamento = estadosUG.Skip(inicio).Take(quantidade).Select(estado => estado.Duracao).ToArray();
 
             for (int index = 0; index < treinamento.Length; index++)
             {

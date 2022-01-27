@@ -1,6 +1,7 @@
 ﻿using Common;
 using Common.Helpers;
 using Common.Model;
+using Common.Model.Data;
 using MarkovChains.Inferencia;
 using Microsoft.Extensions.Logging;
 using System;
@@ -9,6 +10,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MatlabMarkovChains
@@ -20,37 +22,27 @@ namespace MatlabMarkovChains
         private IEnumerable<string> _estados;
         private double[,] _matrizProbabilidades;
         private readonly AppLogger _appLogger;
+        private readonly IRepositorio<Estados> _repositorio;
 
-        public Probabilidades(ILogger<Probabilidades> logger)
-        {            
+        public Probabilidades(ILogger<Probabilidades> logger, IRepositorio<Estados> repositorio)
+        {
+            _repositorio = repositorio;
             _appLogger = new AppLogger(logger, "_logProjeto.log");
             ShowResultsHelper.SetAppLogger(_appLogger);
-            InitializeComponent();
-            ObterDadosUGs();            
+            InitializeComponent();                        
         }
 
-        private void ObterDadosUGs()
+        private async void Probabilidades_Shown(object sender, EventArgs e)
         {
-            var estados = LerArquivoExcel.LerArquivo();
-
-            EstadosPorUnidade estadosPorUnidade = new EstadosPorUnidade(estados);
-            _dadosUGsEstados = estadosPorUnidade.ObterDadosUGsPorEstados();
-            _UGs = _dadosUGsEstados.Select(c => c.UG).Distinct().OrderBy(c => c);
-            _estados = _dadosUGsEstados.SelectMany(c => c.Estados).Select(c => c.Sigla).Distinct().OrderBy(c => c);
-
-            estadosPorUnidade.ExibirResultados();
-
-            _matrizProbabilidades = new double[_estados.Count(), _estados.Count()];
-        }
-
-        private void Probabilidades_Load(object sender, EventArgs e)
-        {
+            DefineProcessando();
+            await ObterDadosUGs();
             PreencherComboUGs();
             PreencherComboEstados();
             PreencherCabecalhosGridView(gridProbabilidades);
             PreencherCabecalhosGridView(gridDistribuicaoUniforme);
             PreencherCabecalhosGridView(gridDistribuicaoEstacionaria);
             PreencherGridViewDadosProbabilidadesUG();
+            RemoveProcessando();
         }
 
         private void cmbUGs_SelectedIndexChanged(object sender, EventArgs e)
@@ -61,9 +53,18 @@ namespace MatlabMarkovChains
 
         private void btnExecutar_Click(object sender, EventArgs e)
         {
-            var cadeiaMarkov = InterpretadorMatlab.ExecutarMatlab(_matrizProbabilidades, _estados, (int) numIteracoes.Value, cmbEstados.SelectedIndex + 1);
+            try
+            {
+                DefineProcessando();
+                var cadeiaMarkov = InterpretadorMatlab.ExecutarMatlab(_matrizProbabilidades, _estados, (int)numIteracoes.Value, cmbEstados.SelectedIndex + 1);
 
-            PreencherResultadoCadeiaMarkov(cadeiaMarkov);            
+                PreencherResultadoCadeiaMarkov(cadeiaMarkov);
+                RemoveProcessando();
+            }
+            catch (Exception ex)
+            {
+                DefineMensagem(ex.Message);
+            }
         }
 
         private void btnInferencia_Click(object sender, EventArgs e)
@@ -71,6 +72,36 @@ namespace MatlabMarkovChains
             ExecutorInferencia.RodarInferencia(_dadosUGsEstados);
         }
 
+        private void DefineMensagem(string msg)
+        {
+            lblStatus.Text = msg;
+        }
+
+        private void DefineProcessando()
+        {
+            lblStatus.Text = "Processando.... Aguarde.";
+        }
+
+        private void RemoveProcessando()
+        {
+            lblStatus.Text = "";
+        }
+
+        private async Task ObterDadosUGs()
+        {
+            var estados = await LerArquivoExcel.LerArquivo(_repositorio);
+
+            await LerArquivoExcel.GravarExcel(estados);
+
+            EstadosPorUnidade estadosPorUnidade = new EstadosPorUnidade(estados);
+            _dadosUGsEstados = estadosPorUnidade.ObterDadosUGsPorEstados();
+            _UGs = _dadosUGsEstados.Select(c => c.UG).Distinct().OrderBy(c => c);
+            _estados = _dadosUGsEstados.SelectMany(c => c.Estados).Select(c => c.EstadoOrigem).Distinct().OrderBy(c => c);
+
+            estadosPorUnidade.ExibirResultados();
+
+            _matrizProbabilidades = new double[_estados.Count(), _estados.Count()];
+        }
 
         private void PreencherResultadoCadeiaMarkov(CadeiaMarkov cadeiaMarkov)
         {
@@ -255,6 +286,6 @@ namespace MatlabMarkovChains
                 gridView.Font,
                 new SolidBrush(gridView.RowHeadersDefaultCellStyle.ForeColor),
                 new PointF((float)e.RowBounds.Left + 2, (float)e.RowBounds.Top + 4));
-        }
+        }        
     }
 }

@@ -18,7 +18,7 @@ namespace Common.Helpers
 
             matlab.Execute($"cd '{SCRIPT_PATH}'");
 
-            matlab.Feval("CadeiaMarkov", OUTPUT_PARAMS, out object result, matriz, estados.ToArray(), iteracoes, estadoAtual);          
+            matlab.Feval("CadeiaMarkov", OUTPUT_PARAMS, out object result, matriz, estados.ToArray(), iteracoes, estadoAtual);
 
             matlab.Quit();
 

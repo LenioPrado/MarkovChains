@@ -1,26 +1,45 @@
-﻿using System;
+﻿using Common.Model.Data;
+using Ganss.Excel;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Common.Model
 {
-    public class Estados
+    [Table("estados", Schema = "markov")]
+    public class Estados : EntidadeBase
     {
-        public string UG { get; set; }
-        public string Sigla { get; set; }
-        public Estados EstadoDestino { get; set; }
-        public string Ocorrencia { get; set; }
-        public DateTime? Inicio { get; set; }
-        public DateTime? Fim { get; set; }
-        public TimeSpan? Duracao { get; set; }
+        public virtual string UG { get; set; }
+        public virtual string EstadoOrigem { get; set; }
+        public virtual string EstadoDestino { get; set; }
+        public virtual string Ocorrencia { get; set; }
+        public virtual DateTime? Inicio { get; set; }        
+        public virtual DateTime? Fim { get; set; }
+        public virtual double Duracao { get; set; }
+
+        public Estados Copiar()
+        {
+            return new()
+            {
+                UG = UG,
+                EstadoOrigem = EstadoOrigem,
+                EstadoDestino = EstadoDestino,
+                Ocorrencia = Ocorrencia,
+                Inicio = Inicio,
+                Fim = Fim
+            };
+        }
 
         public override string ToString()
         {
-            return $"UG: '{UG}' Ocorrência: '{Ocorrencia}' Estado: '{Sigla}' Inicio: '{Inicio}' Fim: '{Fim}'"; ;
+            return $"UG: '{UG}' Ocorrência: '{Ocorrencia}' Estado: '{EstadoOrigem}' Inicio: '{Inicio}' Fim: '{Fim}'"; ;
         }
 
-        public string ChaveUGEstadoAtual { get { return $"{UG}-{Sigla}"; } }
-
-        public string ChaveUGEstadoAtualDestino{ get { return $"{UG}-{Sigla}-{EstadoDestino?.Sigla}"; } }
+        public bool OrigemDiferenteDestino()
+        {
+            return !EstadoOrigem.Equals(EstadoDestino);
+        }
     }
 }

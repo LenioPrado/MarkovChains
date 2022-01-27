@@ -17,8 +17,6 @@ namespace Common.Model
             Estados = estados.ToList();
             DadosEstadoAtualDestino = new Dictionary<KeyValuePair<string, string>, DadosOrigemDestino>();
 
-            PreencherEstadoDestino();
-            VerificarIntervalosDataEstados();
             DividirEstadosPorOrigemDestino();           
         }
 
@@ -34,47 +32,15 @@ namespace Common.Model
             return null;
         }
 
-        private void PreencherEstadoDestino()
-        {
-            for (int index = 0; index < Estados.Count(); index++)
-            {
-                if (index > 0)
-                {
-                    Estados estadoAtual = Estados.ElementAt(index);
-                    Estados[index - 1].EstadoDestino = estadoAtual;
-                }
-            }
-
-            Estados = Estados.Where(estado => estado.EstadoDestino != null && !string.IsNullOrEmpty(estado.Sigla)).ToList();
-        }
-
-        private void VerificarIntervalosDataEstados()
-        {
-            IList<string> erros = new List<string>();
-
-            foreach (var estado in Estados)
-            {
-                if (estado.EstadoDestino != null && estado.EstadoDestino.Inicio != estado.Fim)
-                {                    
-                    erros.Add(estado.ToString());
-                }
-            }
-
-            if (erros.Count > 0)
-            {
-                erros.ToList().ForEach(erro => Console.WriteLine(erro));
-            }           
-        }
-
         private void DividirEstadosPorOrigemDestino()
         {
             foreach (var estadoAtual in ObterListaDistintadeEstadosAtuais())
             {
-                var listaUGEstadoAtual = Estados.Where(c => c.Sigla.Equals(estadoAtual));
+                var listaUGEstadoAtual = Estados.Where(c => c.EstadoOrigem.Equals(estadoAtual));
 
                 foreach (var estadoDestino in ObterListaDistintadeEstadosDestino())
                 {
-                    var listaUGEstadoDestino = listaUGEstadoAtual.Where(c => c.EstadoDestino.Sigla.Equals(estadoDestino));
+                    var listaUGEstadoDestino = listaUGEstadoAtual.Where(c => !string.IsNullOrEmpty(c.EstadoDestino) && c.EstadoDestino.Equals(estadoDestino));
 
                     DadosOrigemDestino dadosOrigemDestino = new() 
                     { 
@@ -98,12 +64,12 @@ namespace Common.Model
 
         private IEnumerable<string> ObterListaDistintadeEstadosAtuais()
         {
-            return Estados.Select(c => c.Sigla).OrderBy(c => c).Distinct();
+            return Estados.Select(c => c.EstadoOrigem).OrderBy(c => c).Distinct();
         }
 
         private IEnumerable<string> ObterListaDistintadeEstadosDestino()
         {
-            return Estados.Where(c => c.EstadoDestino != null).Select(c => c.EstadoDestino.Sigla).OrderBy(c => c).Distinct();
+            return Estados.Where(c => c.EstadoDestino != null).Select(c => c.EstadoDestino).OrderBy(c => c).Distinct();
         }
     }
 }

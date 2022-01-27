@@ -71,9 +71,9 @@ namespace Common.Helpers
                     _writer.Write(msg);
                 _writer.Flush();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
     }

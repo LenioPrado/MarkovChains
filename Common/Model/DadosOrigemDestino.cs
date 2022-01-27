@@ -8,10 +8,10 @@ namespace Common.Model
     public class DadosOrigemDestino
     {
         public IEnumerable<Estados> ListaEstadoAtual { get; set; }
-        public int ContagemEstadoAtual { get { return ListaEstadoAtual.Count(); } }
+        public double SomaDuracaoEstadoAtual { get { return ListaEstadoAtual.Sum(c => c.Duracao); } }
         public IEnumerable<Estados> ListaEstadoDestino { get; set; }
-        public int ContagemEstadoDestino { get { return ListaEstadoDestino.Count(); } }
-        public double Percentual { get { return Math.Round((double)ListaEstadoDestino.Count() / (double)ListaEstadoAtual.Count(), 3); } }
+        public double SomaDuracaoEstadoDestino { get { return ListaEstadoDestino.Sum(c => c.Duracao); } }
+        public double Percentual { get { return Math.Round(SomaDuracaoEstadoDestino / SomaDuracaoEstadoAtual, 3); } }
         public double PercentualFormatado { get { return Math.Round(Percentual * 100, 3); } }
     }
 }
